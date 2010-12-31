@@ -17,14 +17,13 @@ import com.google.gson.JsonObject;
 public class GithubClient {
 
     private static final String commitsPattern = "http://github.com/api/v2/json/commits/list/%s/%s/master";
-    private static final String identifierPattern = "%s:%s";
     private static final String treePattern = "http://github.com/api/v2/json/tree/full/%s/%s/%s";
     
     private String userName;
     private String repoName;
     
     private String treeSha;
-          
+    
     public GithubClient(String userName, String repoName) {
         this.userName = userName;
         this.repoName = repoName;
@@ -34,7 +33,7 @@ public class GithubClient {
         fetchLatestTreeSha();
         
         Repo repo = new Repo();
-        repo.identifier = String.format(identifierPattern, userName, repoName);
+        repo.identifier = Repo.makeIdentifier(userName, repoName);
         repo.treeSha = treeSha;
         
         BlobsAndTreesReader reader = new BlobsAndTreesReader(userName, repoName, getBlobsAndTrees());
