@@ -1,0 +1,23 @@
+div {
+  	width: 480px;
+	float: left;
+	font-size: 14px;
+	padding: 4px;
+}
+
+h1 {
+	background-color: #9FF25D;
+	color: #444444;
+	font-size: 16px;
+	padding: 4px;
+}
+
+h1 + p {
+	border: 0px;
+	margin: 0px;
+}
+
+p {
+	border-top: 1px solid #444;
+	margin: 0px;
+}

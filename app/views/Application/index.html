@@ -1,4 +1,18 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-#{welcome /}
+<div>
+#{list items: first, as: 'sheet'}
+    ${sheet.data.raw()}
+#{/list}
+</div>
+<div>
+#{list items: second, as: 'sheet'}
+    ${sheet.data.raw()}
+#{/list}
+</div>
+<div>
+#{list items: third, as: 'sheet'}
+    ${sheet.data.raw()}
+#{/list}
+</div>
