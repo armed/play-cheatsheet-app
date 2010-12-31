@@ -4,4 +4,5 @@ tmp/
 eclipse/
 test-result/
 *javadoc*
+war/
 
