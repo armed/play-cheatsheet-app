@@ -1,8 +1,16 @@
 package client;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
+
+import jj.play.org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
+import jj.play.org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 import play.libs.WS;
 
@@ -10,9 +18,15 @@ import models.Image;
 import models.Sheet;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
+import com.google.common.primitives.Bytes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.RequestBuilder;
 
 public class BlobsAndTreesReader {
     
@@ -21,6 +35,12 @@ public class BlobsAndTreesReader {
     private String userName;
     private String repoName;
     private JsonArray blobsAndTrees;
+    
+    public static String toHTML(String textile) {
+        String html = new MarkupParser(new TextileLanguage()).parseToHtml(textile);
+        html = html.substring(html.indexOf("<body>") + 6, html.lastIndexOf("</body>"));
+        return html;
+    }
     
     public BlobsAndTreesReader(String userName, String repoName, JsonArray blobsAndTrees) {
         this.userName = userName;
@@ -37,7 +57,7 @@ public class BlobsAndTreesReader {
             if (isMimeTypeTextPlain(obj) && isTypeBlob(obj) && endsWithTextile(obj)) {
                 Sheet s = new Sheet();
                 s.name = getStringProp(obj, "name");
-                s.data = getStringData(getStringProp(obj, "sha"));
+                s.data = toHTML(getStringData(getStringProp(obj, "sha")));
                 sheets.add(s);
             }
         }
@@ -101,12 +121,13 @@ public class BlobsAndTreesReader {
 
     public byte[] getByteData(String sha, int length) {
         try {
-            InputStream stream = WS.url(blob(sha)).get().getStream();
-            byte[] buff = new byte[length];
-            stream.read(buff);
-            stream.close();
+            HttpClient client = new HttpClient();
+            GetMethod get = new GetMethod(blob(sha));
+            client.executeMethod(get);
+            byte[] buff = get.getResponseBody();
+                        
             return buff;
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error reading binary object", e);
         }
     }
