@@ -1,0 +1,7 @@
+.*
+!.gitignore
+tmp/
+eclipse/
+test-result/
+*javadoc*
+
