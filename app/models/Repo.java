@@ -12,7 +12,7 @@ import com.vercer.engine.persist.annotation.Key;
 import play.modules.twig.Twig;
 import play.modules.twig.TwigModel;
 
-public class Repo extends TwigModel implements Serializable {
+public class Repo extends TwigModel {
 
     private static final String identifierPattern = "%s:%s";
     
