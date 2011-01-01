@@ -26,11 +26,15 @@ public class Repo extends TwigModel {
         return String.format(identifierPattern, userName, repoName);
     }
     
-    public static List<Repo> findByIdentifier(String identifier) {
+    public static Repo findByIdentifier(String identifier) {
         List<Repo> repos = Lists.newArrayList(Twig.find()
                                                 .type(Repo.class)
                                                 .addFilter("identifier", FilterOperator.EQUAL, identifier)
                                                 .returnResultsNow());
-        return repos;
+        if (repos.size() == 0) {
+            return null;
+        } else {
+            return repos.get(0);
+        }
     }
 }

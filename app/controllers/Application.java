@@ -42,14 +42,12 @@ public class Application extends Controller {
         Repo repo = (Repo) Cache.get(identifier);
         
         if (repo == null) {
-            List<Repo> repos = Repo.findByIdentifier(identifier);
+            repo = Repo.findByIdentifier(identifier);
             
-            if (repos.size() == 0) {
+            if (repo == null) {
                 GithubClient client = new GithubClient(userName, repoName);
                 repo = client.getLatest();
                 repo.store();
-            } else {
-                repo = repos.get(0);
             }
             
             Cache.set(identifier, repo, "8h");
@@ -67,10 +65,10 @@ public class Application extends Controller {
             identifier = Repo.makeIdentifier(userName, repoName);
         }
         
-        List<Repo> repos = Repo.findByIdentifier(identifier);
+        Repo repo = Repo.findByIdentifier(identifier);
         
-        if (repos.size() > 0) {
-            repos.get(0).delete();
+        if (repo != null) {
+            repo.delete();
         }
         
         Cache.delete(identifier);
