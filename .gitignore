@@ -5,4 +5,5 @@ eclipse/
 test-result/
 *javadoc*
 war/
+precompiled/
 
