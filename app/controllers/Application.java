@@ -52,7 +52,7 @@ public class Application extends Controller {
                 repo = repos.get(0);
             }
             
-            Cache.set(identifier, repo);
+            Cache.set(identifier, repo, "8h");
         }
         
         return repo;
