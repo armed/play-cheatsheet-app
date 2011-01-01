@@ -1,18 +1,50 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-<div>
-#{list items: first, as: 'sheet'}
-    ${sheet.data.raw()}
-#{/list}
+<div id="logo">
+    <a href="/">Playframework</a>
+    <span>Based on Olivier Refalo's Play! Framework cheat sheet</span>
 </div>
-<div>
-#{list items: second, as: 'sheet'}
-    ${sheet.data.raw()}
-#{/list}
+<div id="content">
+	<table>
+	    <tr valign="top">
+	        <td id="first"></td>
+	        <td id="second"></td>
+	        <td id="third"></td>
+	    </tr>
+	</table>
 </div>
-<div>
-#{list items: third, as: 'sheet'}
-    ${sheet.data.raw()}
+#{list items: repo.sheets, as: 'sheet'}
+    <div class="chapter">
+        ${sheet.data.raw()}
+    </div>
 #{/list}
-</div>
+
+<script type="text/javascript">
+    $(function() {
+        var divs = $('div.chapter');
+        
+        var columns = [$('#first'), $('#second'), $('#third')];
+        var heights = [0, 0, 0];
+        
+        $.each(divs, function(i, value) {
+            var s = Number.MAX_VALUE;
+            var index = 0;
+            
+            for (var y in columns) {
+                var height = heights[y];
+                
+                if (s > height) {
+                    s = height;
+                    index = y;
+                }
+            }
+            var current = columns[index]; 
+    
+            $(value).detach();
+            current.append(value);
+            $(value).show();
+            heights[index] += $(value).height();   
+        });   
+    });
+</script>

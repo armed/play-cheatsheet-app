@@ -12,7 +12,7 @@ import java.util.*;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.common.collect.Lists;
 
-import client.BlobsAndTreesReader;
+import client.CheatSheetsReader;
 import client.GithubClient;
 
 import jj.play.org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -23,7 +23,7 @@ import models.*;
 public class Application extends Controller {
     
     private static final String defaultUser = "armed";
-    private static final String defaultRepo = "test-repo";
+    private static final String defaultRepo = "play-cheatsheets";
 
     public static void index(String userName, String repoName) {
         Repo repo = null;
@@ -33,31 +33,7 @@ public class Application extends Controller {
             repo = getRepo(userName, repoName);
         }
         
-        Cache.set(session.getId(), repo.identifier);
-                
-        List<Sheet> first = Lists.newArrayList();
-        List<Sheet> second = Lists.newArrayList();
-        List<Sheet> third = Lists.newArrayList();
-        
-        int col = 0;
-        for (int i = 0; i < repo.sheets.size(); i++) {
-            if (col == 2) {
-                third.add(repo.sheets.get(i));
-                col = 0;
-            } else if (col == 1) {
-                second.add(repo.sheets.get(i));
-                col = 2;
-            } else {
-                first.add(repo.sheets.get(i));
-                col = 1;
-            }
-        }
-        
-        render(first, second, third);
-    }
-    
-    private static Repo getRepo(String identifier) {
-        return getRepo(identifier.split(":")[0], identifier.split(":")[1]);
+        render(repo);
     }
     
     private static Repo getRepo(String userName, String repoName) {
@@ -66,10 +42,7 @@ public class Application extends Controller {
         Repo repo = (Repo) Cache.get(identifier);
         
         if (repo == null) {
-            List<Repo> repos = Lists.newArrayList(Twig.find()
-                                                    .type(Repo.class)
-                                                    .addFilter("identifier", FilterOperator.EQUAL, identifier)
-                                                    .returnResultsNow());
+            List<Repo> repos = Repo.findByIdentifier(identifier);
             
             if (repos.size() == 0) {
                 GithubClient client = new GithubClient(userName, repoName);
@@ -84,25 +57,24 @@ public class Application extends Controller {
         
         return repo;
     }
-
-    public static void image(String name) {
-        String identifier = (String) Cache.get(session.getId());
-                
-        if (identifier == null || identifier.isEmpty()) {
-            notFound();
+    
+    public static void resetCache(String userName, String repoName) {
+        String identifier;
+        
+        if (userName == null || repoName == null || userName.isEmpty() || repoName.isEmpty()) {
+            identifier = Repo.makeIdentifier(defaultUser, defaultRepo);
+        } else {
+            identifier = Repo.makeIdentifier(userName, repoName);
         }
         
-        Repo repo = getRepo(identifier);
-
-        for (Image img : repo.images) {
-            if (img.name.equals("images/" + name)) {
-                ByteArrayInputStream bais = new ByteArrayInputStream(img.data);
-                
-                response.setHeader("Content-type", img.mimeType);
-                renderBinary(bais);
-            }
+        List<Repo> repos = Repo.findByIdentifier(identifier);
+        
+        if (repos.size() > 0) {
+            repos.get(0).delete();
         }
         
-        notFound();
+        Cache.delete(identifier);
+        
+        index(userName, repoName);
     }
 }

@@ -1,28 +1,45 @@
 package client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 
-import models.Image;
 import models.Repo;
-import models.Sheet;
-import play.libs.WS;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class GithubClient {
 
     private static final String commitsPattern = "http://github.com/api/v2/json/commits/list/%s/%s/master";
     private static final String treePattern = "http://github.com/api/v2/json/tree/full/%s/%s/%s";
-    
+
     private String userName;
     private String repoName;
-    
+
     private String treeSha;
+
+    public static String getStringData(String req) {
+        try {
+            URL url = new URL(req);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            String line;
+            StringBuilder jsonString = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                jsonString.append(line);
+            }
+            reader.close();
+
+            return jsonString.toString();
+        } catch (Exception e) {
+            if (!(e instanceof RuntimeException)) {
+                throw new RuntimeException("Error getting data from github", e);
+            } else {
+                throw (RuntimeException) e;
+            }
+        }
+    }
     
     public GithubClient(String userName, String repoName) {
         this.userName = userName;
@@ -31,38 +48,37 @@ public class GithubClient {
 
     public Repo getLatest() {
         fetchLatestTreeSha();
-        
+
         Repo repo = new Repo();
         repo.identifier = Repo.makeIdentifier(userName, repoName);
         repo.treeSha = treeSha;
-        
-        BlobsAndTreesReader reader = new BlobsAndTreesReader(userName, repoName, getBlobsAndTrees());
-                
+
+        CheatSheetsReader reader = new CheatSheetsReader(userName, repoName, getBlobsAndTrees());
+
         repo.sheets = reader.getSheets();
-        repo.images = reader.getImages();
-        
+
         return repo;
     }
 
     private void fetchLatestTreeSha() {
-        JsonArray commits = asArray(commits(), "commits");
+        JsonArray commits = asArray(commitsUrl(), "commits");
         JsonObject commit = (JsonObject) commits.get(0);
         treeSha = commit.get("tree").getAsString();
     }
-    
-    private String commits() {
+
+    private String commitsUrl() {
         return String.format(commitsPattern, userName, repoName);
     }
-    
+
     private JsonArray asArray(String req, String arrayName) {
-        return (JsonArray) ((JsonObject) WS.url(req).get().getJson()).get(arrayName);
+        return (JsonArray) ((JsonObject) new JsonParser().parse(getStringData(req))).get(arrayName);
     }
-    
+
     private JsonArray getBlobsAndTrees() {
-        return asArray(tree(), "tree");
+        return asArray(treeUrl(), "tree");
     }
-    
-    private String tree() {
+
+    private String treeUrl() {
         return String.format(treePattern, userName, repoName, treeSha);
     }
 }

@@ -1,8 +1,8 @@
-div {
-  	width: 480px;
-	float: left;
+div.chapter {
+  	width: 100%;
 	font-size: 14px;
-	padding: 4px;
+//	padding: 4px;
+	display: none;
 }
 
 h1 {
@@ -21,3 +21,35 @@ p {
 	border-top: 1px solid #444;
 	margin: 0px;
 }
+
+div#content table {
+	width: 100%;
+}
+
+#logo {
+	position: relative;
+    height: 70px;
+    background: #444;
+    background:  -webkit-gradient(linear, left top, left bottom, from(#555), to(#333));
+    background:  -moz-linear-gradient(top, #555, #333);
+    background:  gradient(linear, left top, left bottom, from(#555), to(#333));
+}
+
+#logo a {
+    background: url(../images/logo.png) no-repeat 50% 50%;
+    display: block;
+    height: 50px;
+    left: 10px;
+    position: absolute;
+    text-indent: -99em;
+    top: 10px;
+    width: 140px;
+}
+
+#logo span {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	color: #fff;
+	font-size: 10px;
+}	
