@@ -27,13 +27,17 @@ public class Application extends Controller {
 
     public static void index(String userName, String repoName) {
         Repo repo = null;
-        if (userName == null || repoName == null || userName.isEmpty() || repoName.isEmpty()) {
+        if (isEmpty(userName, repoName)) {
             repo = getRepo(defaultUser, defaultRepo);
         } else {
             repo = getRepo(userName, repoName);
         }
         
         render(repo);
+    }
+
+    private static boolean isEmpty(String userName, String repoName) {
+        return userName == null || repoName == null || userName.isEmpty() || repoName.isEmpty();
     }
     
     private static Repo getRepo(String userName, String repoName) {
@@ -60,7 +64,7 @@ public class Application extends Controller {
     public static void resetCache(String userName, String repoName) {
         String identifier;
         
-        if (userName == null || repoName == null || userName.isEmpty() || repoName.isEmpty()) {
+        if (isEmpty(userName, repoName)) {
             identifier = Repo.makeIdentifier(defaultUser, defaultRepo);
         } else {
             identifier = Repo.makeIdentifier(userName, repoName);

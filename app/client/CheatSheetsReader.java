@@ -16,7 +16,7 @@ public class CheatSheetsReader {
     
     private static final String blobPattern = "http://github.com/api/v2/json/blob/show/%s/%s/%s";
     private static final int MAX_SHEETS = 100;
-    private static final int SHEET_MAX_SIZE = 50000;
+    private static final int SHEET_MAX_SIZE = 10000;
 
     private String userName;
     private String repoName;
