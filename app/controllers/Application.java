@@ -45,6 +45,7 @@ public class Application extends Controller {
             repo = Repo.findByIdentifier(identifier);
             
             if (repo == null) {
+                Logger.info("Nothing found, requesting github");
                 GithubClient client = new GithubClient(userName, repoName);
                 repo = client.getLatest();
                 repo.store();
