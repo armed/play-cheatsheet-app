@@ -1,13 +1,20 @@
+html, body {
+    color: #555;
+    background: #F7F7F7;
+    font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5em !important;
+}
+
 div.chapter {
   	width: 100%;
 	font-size: 14px;
-//	padding: 4px;
 	display: none;
 }
 
 h1 {
 	background-color: #9FF25D;
-	color: #444444;
+	color: #444;
 	font-size: 16px;
 	padding: 4px;
 }
@@ -18,7 +25,7 @@ h1 + p {
 }
 
 p {
-	border-top: 1px solid #444;
+	border-top: 1px solid #777;
 	margin: 0px;
 }
 
@@ -50,6 +57,11 @@ div#content table {
 	position: absolute;
 	right: 10px;
 	bottom: 10px;
-	color: #fff;
-	font-size: 10px;
+	//color: #fff;
+	//font-size: 10px;
+    color: #B3E862;
+    color: #999;
+    text-shadow: #000 -1px -1px 0px;
+    text-decoration: none;
+    font-size: 15px;
 }	
