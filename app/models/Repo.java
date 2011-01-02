@@ -27,14 +27,6 @@ public class Repo extends TwigModel {
     }
     
     public static Repo findByIdentifier(String identifier) {
-        List<Repo> repos = Lists.newArrayList(Twig.find()
-                                                .type(Repo.class)
-                                                .addFilter("identifier", FilterOperator.EQUAL, identifier)
-                                                .returnResultsNow());
-        if (repos.size() == 0) {
-            return null;
-        } else {
-            return repos.get(0);
-        }
+        return Twig.load(Repo.class, identifier);
     }
 }
