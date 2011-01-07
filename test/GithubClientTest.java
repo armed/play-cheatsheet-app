@@ -1,4 +1,7 @@
 import static org.junit.Assert.*;
+
+import java.util.List;
+
 import models.Repo;
 import models.Sheet;
 
@@ -12,17 +15,17 @@ import client.GithubClient;
 public class GithubClientTest extends FunctionalTest {
 
     @Test
-    public void loadRemoteRepo() {
+    public void loadRemoteRepo() throws Exception {
         String userName = "armed";
         String repoName = "test-repo";
         
-        Repo r = new GithubClient(userName, repoName).getLatest();
+        List<Sheet> sheets = new GithubClient(userName, repoName).getSheets();
         
-        assertNotNull(r);
+        assertNotNull(sheets);
         
-        assertEquals(2, r.sheets.size());
+        assertEquals(26, sheets.size());
         
-        for (Sheet sheet : r.sheets) {
+        for (Sheet sheet : sheets) {
             System.out.println(sheet.data);
         }
     }

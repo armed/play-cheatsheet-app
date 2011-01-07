@@ -3,10 +3,16 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
-GET     /resetCache                             Application.resetCache
-GET     /{userName}/{repoName}                  Application.index
-GET     /resetCache/{userName}/{repoName}       Application.resetCache
+GET     /login                                  Application.login
+GET     /logout                                 Application.logout
+
+GET     /                                       CheatSheet.list
+GET     /show/{id}                              CheatSheet.show
+GET     /create                                 CheatSheet.create
+POST    /save                                   CheatSheet.save
+
+GET     /firstTime                              Registration.index
+POST    /register                               Registration.register
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public

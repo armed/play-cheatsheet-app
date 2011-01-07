@@ -1,0 +1,29 @@
+#{extends 'main.html' /}
+#{set title:'index.html' /}
+
+<div id="cs-form">
+    <div>
+        <div class="caption">Author name</div>
+        <p>Please choose your nickname.</p>
+        #{form @Registration.register()}
+                 
+            <div>
+                <input type="text" name="name" id="name" placeholder="name or nickname" value="${flash.name}" />
+            </div>
+            <div>
+                <input id="register" type="submit" value="Save" />
+            </div>
+        #{/form}
+        
+        #{ifErrors}
+          <script type="text/javascript">
+              #{ifError 'name'} $('#name').addClass('error-input'); #{/ifError}
+          </script>
+          #{errors}
+	          <div class="error">
+	              #{error name /}
+	          </div>
+          #{/errors}
+        #{/ifErrors}
+    </div>
+</div>

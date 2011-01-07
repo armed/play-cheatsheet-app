@@ -8,9 +8,20 @@
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" type="text/javascript" charset="utf-8"></script>
+        <script src="@{'/public/javascripts/jquery.placeholder.js'}" type="text/javascript" charset="utf-8"></script>
         #{get 'moreScripts' /}
     </head>
     <body>
+        <script type="text/javascript">
+            $(function(){
+                $('input').placeholder();
+            });
+        </script>
+        <div id="top">
+		    <a id="logo" href="/">Playframework</a>
+		    <span id="login">#{status user: user /}</span>
+		    <span id="cheat-sheet-title">#{get 'cheatSheetTitle' /}</span>
+		</div>
         #{doLayout /}
     </body>
 </html>

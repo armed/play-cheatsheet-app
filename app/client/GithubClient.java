@@ -1,10 +1,10 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.util.List;
 
-import models.Repo;
+import models.Sheet;
+
+import org.restlet.resource.ClientResource;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -14,24 +14,17 @@ public class GithubClient {
 
     private static final String commitsPattern = "http://github.com/api/v2/json/commits/list/%s/%s/master";
     private static final String treePattern = "http://github.com/api/v2/json/tree/full/%s/%s/%s";
+    private static final String userCheckPattern = "http://github.com/api/v2/json/user/show/%s";
+    private static final String repositoryCheckPattern = "http://github.com/api/v2/json/repos/show/%s/%s";
 
-    private String userName;
+    private String githubUser;
     private String repoName;
 
     private String treeSha;
 
-    public static String getStringData(String req) {
+    private static String getStringData(String req) {
         try {
-            URL url = new URL(req);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
-            StringBuilder jsonString = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                jsonString.append(line);
-            }
-            reader.close();
-
-            return jsonString.toString();
+            return new ClientResource(req).get().getText();
         } catch (Exception e) {
             if (!(e instanceof RuntimeException)) {
                 throw new RuntimeException("Error getting data from github", e);
@@ -40,24 +33,35 @@ public class GithubClient {
             }
         }
     }
-    
-    public GithubClient(String userName, String repoName) {
-        this.userName = userName;
+
+    public GithubClient(String githubUser, String repoName) throws GithubException {
+        this.githubUser = githubUser;
         this.repoName = repoName;
     }
 
-    public Repo getLatest() {
+    public List<Sheet> getSheets() throws GithubException {
+        checkUserExists();
+        checkRepositoryExists();
         fetchLatestTreeSha();
+        CheatSheetsReader reader = new CheatSheetsReader(githubUser, repoName, getBlobsAndTrees());
 
-        Repo repo = new Repo();
-        repo.identifier = Repo.makeIdentifier(userName, repoName);
-        repo.treeSha = treeSha;
+        return reader.getSheets();
+    }
 
-        CheatSheetsReader reader = new CheatSheetsReader(userName, repoName, getBlobsAndTrees());
+    private void checkUserExists() throws GithubException {
+        try {
+            new ClientResource(String.format(userCheckPattern, githubUser)).get().getText();
+        } catch (Exception e) {
+            throw new GithubException("Github user not found");
+        }
+    }
 
-        repo.sheets = reader.getSheets();
-
-        return repo;
+    private void checkRepositoryExists() throws GithubException {
+        try {
+            new ClientResource(String.format(repositoryCheckPattern, githubUser, repoName)).get().getText();
+        } catch (Exception e) {
+            throw new GithubException("Github repo not found");
+        }
     }
 
     private void fetchLatestTreeSha() {
@@ -67,7 +71,7 @@ public class GithubClient {
     }
 
     private String commitsUrl() {
-        return String.format(commitsPattern, userName, repoName);
+        return String.format(commitsPattern, githubUser, repoName);
     }
 
     private JsonArray asArray(String req, String arrayName) {
@@ -79,6 +83,6 @@ public class GithubClient {
     }
 
     private String treeUrl() {
-        return String.format(treePattern, userName, repoName, treeSha);
+        return String.format(treePattern, githubUser, repoName, treeSha);
     }
 }

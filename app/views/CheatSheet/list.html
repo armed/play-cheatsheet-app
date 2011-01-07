@@ -1,0 +1,19 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+#{if storedRepos.size() == 0 }
+    <h2>There is no cheat sheets.</h2>
+#{/if}
+#{else}
+    <h2>Stored cheat sheets</h2>
+    #{list items: storedRepos, as: 'repo'}
+        #{cheatSheetInfo info: repo /}
+    #{/list}
+    <br />
+#{/else}
+#{if user }
+    #{a @CheatSheet.create()}Create new#{/a}
+#{/if}
+#{else}
+    Please login to create one.
+#{/else}

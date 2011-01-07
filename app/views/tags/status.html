@@ -1,0 +1,6 @@
+#{if _user }
+    ${_user.getEmail()} | #{a @Application.logout() }Logout#{/a}
+#{/if}
+#{else}
+    #{a @Application.login() }Login#{/a}
+#{/else}

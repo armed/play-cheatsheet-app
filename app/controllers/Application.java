@@ -1,83 +1,48 @@
 package controllers;
 
-import play.*;
-import play.cache.Cache;
-import play.modules.twig.Twig;
-import play.mvc.*;
+import models.Author;
+import play.modules.gae.GAE;
+import play.mvc.Before;
+import play.mvc.Controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.util.*;
-
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.common.collect.Lists;
-
-import client.CheatSheetsReader;
-import client.GithubClient;
-
-import jj.play.org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import jj.play.org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
-
-import models.*;
+import com.google.appengine.api.users.User;
 
 public class Application extends Controller {
-    
-    private static final String defaultUser = "armed";
-    private static final String defaultRepo = "play-cheatsheets";
 
-    public static void index(String userName, String repoName) {
-        Repo repo = null;
-        if (isEmpty(userName, repoName)) {
-            repo = getRepo(defaultUser, defaultRepo);
-        } else {
-            repo = getRepo(userName, repoName);
+    @Before(unless = { "login", "logout" })
+    static void userParams() {
+        if (GAE.isLoggedIn()) {
+            User user = GAE.getUser();
+            renderArgs.put("user", user);
         }
-        
-        render(repo);
     }
 
-    private static boolean isEmpty(String userName, String repoName) {
-        return userName == null || repoName == null || userName.isEmpty() || repoName.isEmpty();
-    }
-    
-    private static Repo getRepo(String userName, String repoName) {
-        String identifier = Repo.makeIdentifier(userName, repoName);
-        
-        Repo repo = (Repo) Cache.get(identifier);
-        
-        if (repo == null) {
-            repo = Repo.findByIdentifier(identifier);
-            
-            if (repo == null) {
-                Logger.info("Nothing found, requesting github");
-                GithubClient client = new GithubClient(userName, repoName);
-                repo = client.getLatest();
-                repo.store();
+    @Before
+    static void checkSecurity() {
+        if (!GAE.isLoggedIn()) {
+            Secure secure = getActionAnnotation(Secure.class);
+            if (secure != null) {
+                forbidden();
             }
-            
-            Cache.set(identifier, repo, "8h");
         }
-        
-        return repo;
     }
-    
-    public static void resetCache(String userName, String repoName) {
-        String identifier;
-        
-        if (isEmpty(userName, repoName)) {
-            identifier = Repo.makeIdentifier(defaultUser, defaultRepo);
-        } else {
-            identifier = Repo.makeIdentifier(userName, repoName);
+
+    @Before(only = { "CheatSheet.create" })
+    static void checkIsAuthor() {
+        if (GAE.isLoggedIn()) {
+            Author a = Author.findByEmail(GAE.getUser().getEmail());
+
+            if (a == null) {
+                Registration.index();
+            }
         }
-        
-        Repo repo = Repo.findByIdentifier(identifier);
-        
-        if (repo != null) {
-            repo.delete();
-        }
-        
-        Cache.delete(identifier);
-        
-        index(userName, repoName);
+    }
+
+    public static void logout() {
+        GAE.logout("CheatSheet.list");
+    }
+
+    public static void login() {
+        GAE.login("CheatSheet.list");
     }
 }
