@@ -16,9 +16,9 @@ public class Registration extends Application {
 
     @Secure
     public static void register(
-                    @Required(message = "Name is required.") 
+                    @Required(message = "Name is required.")
                     @Match(value = "[a-zA-Z]{1}[a-zA-Z\\d\\s]+",
-                            message = "Name must be alphanumeric and beginning with letter.") 
+                            message = "Name must be alphanumeric and beginning with letter.")
                     String name) {
         if (!Strings.isNullOrEmpty(name) && Author.findByName(name) != null) {
             validation.addError("name", "User with this name already exists.");
