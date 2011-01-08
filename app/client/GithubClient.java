@@ -2,8 +2,6 @@ package client;
 
 import java.util.List;
 
-import models.Sheet;
-
 import org.restlet.resource.ClientResource;
 
 import com.google.gson.JsonArray;
@@ -39,7 +37,7 @@ public class GithubClient {
         this.repoName = repoName;
     }
 
-    public List<Sheet> getSheets() throws GithubException {
+    public List<String> getSheets() throws GithubException {
         checkUserExists();
         checkRepositoryExists();
         fetchLatestTreeSha();

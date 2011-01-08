@@ -5,7 +5,6 @@ import java.util.List;
 
 import jj.play.org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import jj.play.org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
-import models.Sheet;
 
 import org.restlet.data.MediaType;
 import org.restlet.resource.ClientResource;
@@ -37,18 +36,15 @@ class CheatSheetsReader {
         this.blobsAndTrees = blobsAndTrees;
     }
 
-    public List<Sheet> getSheets() throws GithubException {
-        List<Sheet> sheets = Lists.newArrayList();
+    public List<String> getSheets() throws GithubException {
+        List<String> sheets = Lists.newArrayList();
 
         for (JsonElement jsonElement : blobsAndTrees) {
             JsonObject obj = (JsonObject) jsonElement;
 
             if (isMimeTypeTextPlain(obj) && isTypeBlob(obj) && endsWithTextile(obj)
                     && notBiggerThanMaxAllowedSize(obj)) {
-                Sheet s = new Sheet();
-                s.name = getStringProp(obj, "name");
-                s.data = toHTML(getSheetTextBySha(getStringProp(obj, "sha")));
-                sheets.add(s);
+                sheets.add(toHTML(getSheetTextBySha(getStringProp(obj, "sha"))));
             }
 
             if (sheets.size() > MAX_SHEETS) {

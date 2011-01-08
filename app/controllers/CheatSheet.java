@@ -5,7 +5,6 @@ import java.util.Map;
 
 import models.Author;
 import models.Repo;
-import models.Sheet;
 import play.data.validation.Required;
 import play.modules.gae.GAE;
 import client.GithubClient;
@@ -45,7 +44,7 @@ public class CheatSheet extends Application {
         }
 
         try {
-            List<Sheet> sheets = new GithubClient(githubUser, repoName).getSheets();
+            List<String> sheets = new GithubClient(githubUser, repoName).getSheets();
 
             Repo repo = Repo.findByAuthorAndRepo(GAE.getUser().getEmail(), githubUser, repoName);
 

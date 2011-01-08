@@ -1,7 +1,5 @@
 import java.util.List;
 
-import models.Sheet;
-
 import org.junit.Test;
 
 import play.test.FunctionalTest;
@@ -14,7 +12,7 @@ public class GithubClientTest extends FunctionalTest {
         String userName = "armed";
         String repoName = "test-repo";
 
-        List<Sheet> sheets = new GithubClient(userName, repoName).getSheets();
+        List<String> sheets = new GithubClient(userName, repoName).getSheets();
 
         assertNotNull(sheets);
 

@@ -9,11 +9,12 @@ import java.util.Map;
 import play.modules.twig.Twig;
 import play.modules.twig.TwigModel;
 
+import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.common.collect.Maps;
-import com.vercer.engine.persist.annotation.Embed;
 import com.vercer.engine.persist.annotation.Index;
+import com.vercer.engine.persist.annotation.Type;
 
 public class Repo extends TwigModel {
 
@@ -24,8 +25,9 @@ public class Repo extends TwigModel {
     public String title;
 
     public Author author;
-    @Embed
-    public List<Sheet> sheets;
+
+    @Type(Blob.class)
+    public List<String> sheets;
 
     public static Repo findByAuthorAndRepo(String authorEmail, String githubUser, String repoName) {
         return allOrNothing(Twig.find().type(Repo.class)
