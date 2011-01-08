@@ -14,12 +14,13 @@ import client.GithubException;
 public class CheatSheet extends Application {
 
     public static void list() {
-        Map<String, Repo> storedRepos = Repo.findAll();
+        Map<String, Repo> storedRepos = Repo.findAllWithKeys();
         render(storedRepos);
     }
 
-    public static void show(Long id) {
-        Repo repo = Repo.findById(id);
+    public static void show(String authorName, String githubUser, String repoName) {
+        Repo repo = Repo.findByAuthorNameAndRepo(authorName, githubUser, repoName);
+
         if (repo == null) {
             list();
         }
@@ -47,7 +48,7 @@ public class CheatSheet extends Application {
         try {
             List<String> sheets = new GithubClient(githubUser, repoName).getSheets();
 
-            Repo repo = Repo.findByAuthorAndRepo(GAE.getUser().getEmail(), githubUser, repoName);
+            Repo repo = Repo.findByAuthorEmailAndRepo(GAE.getUser().getEmail(), githubUser, repoName);
 
             if (repo == null) {
                 repo = new Repo();
@@ -70,8 +71,9 @@ public class CheatSheet extends Application {
     }
 
     @Secure
-    public static void delete(Long id) {
-        Repo repo = Repo.findById(id);
+    public static void delete(String authorName, String githubUser, String repoName) {
+        Repo repo = Repo.findByAuthorNameAndRepo(authorName, githubUser, repoName);
+
         if (repo != null) {
             if (!repo.author.email.equals(GAE.getUser().getEmail())) {
                 forbidden();

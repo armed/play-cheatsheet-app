@@ -11,9 +11,11 @@ import play.modules.twig.TwigModel;
 
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.common.collect.Maps;
 import com.vercer.engine.persist.annotation.Index;
+import com.vercer.engine.persist.annotation.Parent;
 import com.vercer.engine.persist.annotation.Type;
 
 public class Repo extends TwigModel {
@@ -24,20 +26,39 @@ public class Repo extends TwigModel {
     public String repoName;
     public String title;
 
+    @Parent
     public Author author;
 
     @Type(Blob.class)
     public List<String> sheets;
 
-    public static Repo findByAuthorAndRepo(String authorEmail, String githubUser, String repoName) {
+    public static Repo findByAuthorEmailAndRepo(String authorEmail, String githubUser, String repoName) {
+        Author author = Author.findByEmail(authorEmail);
+
+        if (author != null) {
+            return findByAncestorAndRepo(githubUser, repoName, author);
+        }
+        return null;
+    }
+
+    public static Repo findByAuthorNameAndRepo(String authorName, String githubUser, String repoName) {
+        Author author = Author.findByName(authorName);
+
+        if (author != null) {
+            return findByAncestorAndRepo(githubUser, repoName, author);
+        }
+        return null;
+    }
+
+    public static Repo findByAncestorAndRepo(String githubUser, String repoName, Author author) {
         return allOrNothing(Twig.find().type(Repo.class)
-                .addFilter("author.email", FilterOperator.EQUAL, authorEmail)
+                .withAncestor(author)
                 .addFilter("githubUser", FilterOperator.EQUAL, githubUser)
                 .addFilter("repoName", FilterOperator.EQUAL, repoName)
                 .returnResultsNow());
     }
 
-    public static Map<String, Repo> findAll() {
+    public static Map<String, Repo> findAllWithKeys() {
         Iterator<Repo> iter = Twig.find().type(Repo.class).returnResultsNow();
         Map<String, Repo> result = Maps.newHashMap();
 
@@ -45,13 +66,13 @@ public class Repo extends TwigModel {
             Repo repo = iter.next();
             Key key = Twig.associatedKey(repo);
 
-            result.put(String.valueOf(key.getId()), repo);
+            result.put(KeyFactory.keyToString(key), repo);
         }
 
         return result;
     }
 
-    public static Repo findById(Long id) {
-        return Twig.load(Repo.class, id);
+    public static Repo findById(String id) {
+        return Twig.load(KeyFactory.stringToKey(id));
     }
 }

@@ -3,20 +3,20 @@
 # ~~~~
 
 # Home page
-GET     /login                                  Application.login
-GET     /logout                                 Application.logout
+GET     /login                                              Application.login
+GET     /logout                                             Application.logout
 
-GET     /                                       CheatSheet.list
-GET     /show/{id}                              CheatSheet.show
-GET     /create                                 CheatSheet.create
-POST    /save                                   CheatSheet.save
-GET     /delete/{id}                            CheatSheet.delete
+GET     /                                                   CheatSheet.list
+GET     /show/{authorName}/{githubUser}/{repoName}          CheatSheet.show
+GET     /create                                             CheatSheet.create
+POST    /save                                               CheatSheet.save
+GET     /delete/{authorName}/{githubUser}/{repoName}        CheatSheet.delete
 
-GET     /firstTime                              Registration.index
-POST    /register                               Registration.register
+GET     /firstTime                                          Registration.index
+POST    /register                                           Registration.register
 
 # Map static resources from the /app/public folder to the /public path
-GET     /public/                                staticDir:public
+GET     /public/                                            staticDir:public
 
 # Catch all
 #*       /{controller}/{action}                  {controller}.{action}
