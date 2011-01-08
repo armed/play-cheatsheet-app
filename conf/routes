@@ -10,6 +10,7 @@ GET     /                                       CheatSheet.list
 GET     /show/{id}                              CheatSheet.show
 GET     /create                                 CheatSheet.create
 POST    /save                                   CheatSheet.save
+GET     /delete/{id}                            CheatSheet.delete
 
 GET     /firstTime                              Registration.index
 POST    /register                               Registration.register

@@ -1,5 +1,8 @@
-
 <div class="repoInfo">
     #{a @CheatSheet.show(_info.key)}${_info.value.title}#{/a} 
     #{if _info.value.author}(${_info.value.author.name})#{/if}
+
+    #{if _user?.email == _info.value.author.email}
+     - #{a @CheatSheet.delete(_info.key)}delete#{/a}
+    #{/if}
 </div>

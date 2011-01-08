@@ -7,6 +7,7 @@ import models.Author;
 import models.Repo;
 import play.data.validation.Required;
 import play.modules.gae.GAE;
+import play.modules.twig.Twig;
 import client.GithubClient;
 import client.GithubException;
 
@@ -66,5 +67,18 @@ public class CheatSheet extends Application {
             params.flash();
             create();
         }
+    }
+
+    @Secure
+    public static void delete(Long id) {
+        Repo repo = Repo.findById(id);
+        if (repo != null) {
+            if (!repo.author.email.equals(GAE.getUser().getEmail())) {
+                forbidden();
+            }
+            Twig.delete(repo);
+        }
+
+        list();
     }
 }

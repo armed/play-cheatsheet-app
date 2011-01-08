@@ -7,7 +7,7 @@
 #{else}
     <h2>Stored cheat sheets</h2>
     #{list items: storedRepos, as: 'repo'}
-        #{cheatSheetInfo info: repo /}
+        #{cheatSheetInfo info: repo, user: user /}
     #{/list}
     <br />
 #{/else}
