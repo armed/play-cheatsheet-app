@@ -2,10 +2,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import play.test.FunctionalTest;
+import play.test.BaseTest;
 import client.GithubClient;
 
-public class GithubClientTest extends FunctionalTest {
+public class GithubClientTest extends BaseTest {
 
     @Test
     public void loadRemoteRepo() throws Exception {
