@@ -3,12 +3,11 @@
 
 <div id="cs-form">
     <div>
-        <div class="caption">Author name</div>
-        <p>Please choose your nickname.</p>
+        <div class="caption">Nickname</div>
+        <p>Please choose your nickname</p>
         #{form @Registration.register()}
-                 
             <div>
-                <input type="text" name="name" id="name" placeholder="name or nickname" value="${flash.name}" />
+                <input type="text" name="name" id="name" value="${flash.name}" />
             </div>
             <div>
                 <input id="register" type="submit" value="Save" />
@@ -21,7 +20,7 @@
           </script>
           #{errors}
 	          <div class="error">
-	              #{error name /}
+	              #{error 'name' /}
 	          </div>
           #{/errors}
         #{/ifErrors}
