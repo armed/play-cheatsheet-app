@@ -2,36 +2,39 @@
 #{set title:'Create cheat sheet' /}
 
 <div id="cs-form">
-	<div>
-	    <div class="caption">New cheat sheet</div>
-	    #{form @CheatSheet.save()}
-	        <div>
-	            <input type="text" name="title" id="title" placeholder="Cheat sheet title" value="${flash.title}" />
-	        </div>
-	        <p>Github repository which contains cheat sheets in textile format</p>
-	        <div>
-	            <input type="text" name="githubUser" id="githubUser" placeholder="Guthub user name" value="${flash.githubUser}" />
-	        </div>
-	        <div>
-	            <input type="text" name="repoName" id="repoName"  placeholder="Repository name" value="${flash.repoName}" />
-	        </div>
-	        <div>
-	            <input id="createBtn" type="submit" value="Create" />
-	        </div>
-	    #{/form}
-	    
-	    #{ifErrors}
-	      <script type="text/javascript">
-	          #{ifError 'title'} $('#title').addClass('error-input'); #{/ifError}
-	          #{ifError 'githubUser'} $('#githubUser').addClass('error-input'); #{/ifError}
-	          #{ifError 'repoName'} $('#repoName').addClass('error-input'); #{/ifError}          
-	      </script>
-	    #{/ifErrors}
-	    
-	    #{if flash.githubError }
-	      <div class="error">
-	          ${flash.githubError}
-	      </div>
-	    #{/if}
-	</div>
+    <div>
+        <div class="caption">New cheat sheet</div>
+        #{form @CheatSheet.save()}
+            <div>
+                <input type="text" name="title" id="title" placeholder="Cheat sheet title" value="${flash.title}" />
+            </div>
+            <p>Github repository which contains cheat sheets in textile format</p>
+            <div>
+                <input type="text" name="githubUser" id="githubUser" placeholder="Guthub user name" value="${flash.githubUser}" />
+            </div>
+            <div>
+                <input type="text" name="repoName" id="repoName"  placeholder="Repository name" value="${flash.repoName}" />
+            </div>
+            <div>
+                <input type="checkbox" name="visible" id="visible" value="true" />Visible to others
+            </div>
+            <div>
+                <input id="createBtn" type="submit" value="Create" />
+            </div>
+        #{/form}
+
+        #{ifErrors}
+            <script type="text/javascript">
+                #{ifError 'title'} $('#title').addClass('error-input'); #{/ifError}
+                #{ifError 'githubUser'} $('#githubUser').addClass('error-input'); #{/ifError}
+                #{ifError 'repoName'} $('#repoName').addClass('error-input'); #{/ifError}
+            </script>
+        #{/ifErrors}
+
+        #{if flash.githubError }
+            <div class="error">
+                ${flash.githubError}
+            </div>
+        #{/if}
+    </div>
 </div>

@@ -2,13 +2,13 @@
 #{set title: repo.title /}
 #{set cheatSheetTitle: repo.title /}
 <div id="content">
-	<table>
-	    <tr valign="top">
-	        <td id="first"></td>
-	        <td id="second"></td>
-	        <td id="third"></td>
-	    </tr>
-	</table>
+    <table>
+        <tr valign="top">
+            <td id="first"></td>
+            <td id="second"></td>
+            <td id="third"></td>
+        </tr>
+    </table>
 </div>
 #{list items: repo.sheets, as: 'sheet'}
     <div class="chapter">
@@ -35,12 +35,12 @@
                     index = y;
                 }
             }
-            var current = columns[index]; 
-    
+            var current = columns[index];
+
             $(value).detach();
             current.append(value);
             $(value).show();
-            heights[index] += $(value).height();   
-        });   
+            heights[index] += $(value).height();
+        });
     });
 </script>
