@@ -2,13 +2,9 @@
     %{
         def repo = _info.value;
     }%
-    <div class="editinplace">
-        #{a @CheatSheet.show(repo.author.name, repo.githubUser, repo.repoName)}${repo.title}#{/a}
-    </div> 
+    #{a @CheatSheet.show(repo.author.name, repo.githubUser, repo.repoName)}${repo.title}#{/a}
     #{if _info.value.author}(${repo.author.name})#{/if}
-
     #{if _user?.email == repo.author.email}
-     - #{a @CheatSheet.delete(repo.author.name, repo.githubUser, repo.repoName)}delete#{/a}
-     or rename
+     - #{a @CheatSheet.delete(repo.author.name, repo.githubUser, repo.repoName)}delete#{/a} or manage
     #{/if}
 </div>
