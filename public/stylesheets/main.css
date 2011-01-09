@@ -21,37 +21,39 @@ h2 {
 }
 
 div.chapter {
-  	width: 100%;
-	font-size: 14px;
-	display: none;
+    width: 100%;
+    font-size: 14px;
+    display: none;
 }
 
 h1 {
-	background-color: #9FF25D;
-	color: #444;
-	font-size: 16px;
-	padding: 4px;
+    background-color: #9FF25D;
+    color: #444;
+    font-size: 16px;
+    padding: 4px;
 }
 
 h1 + p {
-	border: 0px;
-	margin: 0px;
+    border: 0px;
+    margin: 0px;
 }
 
 p {
-	border-top: 1px solid #777;
-	margin: 0px;
+    border-top: 1px solid #777;
+    margin: 0px;
 }
 
 div#content table {
-	width: 100%;
+width:   100%;
 }
 
-.placeholder{ color:#aaa; }
+.placeholder {
+    color:#aaa;
+}
 
 
 #top {
-	position: relative;
+    position: relative;
     height: 70px;
     background: #444;
     background:  -webkit-gradient(linear, left top, left bottom, from(#555), to(#333));
@@ -71,72 +73,72 @@ div#content table {
 }
 
 #top span {
-  position: absolute;
-  text-shadow: #000 -1px -1px 0px;
-  text-decoration: none;
-  color: #fff;
+    position: absolute;
+    text-shadow: #000 -1px -1px 0px;
+    text-decoration: none;
+    color: #fff;
 }
 
 #top a {
-  color: #fff;	
+    color: #fff;
 }
 
 #top span#cheat-sheet-title {
-  right: 10px;
-  bottom: 10px;
-  font-size: 15px;
+    right: 10px;
+    bottom: 10px;
+    font-size: 15px;
 }
 
 #top span#login {
-  right: 10px;
-  top: 10px;
-  font-size: 12px;
+    right: 10px;
+    top: 10px;
+    font-size: 12px;
 }	
 
 #cs-form {
-  position: relative;
-  top: 20px;
-	width: 300px;
-	margin: auto;
-	background-color: #7A7A7A; /*#6690BE;*/
+    position: relative;
+    top: 20px;
+    width: 300px;
+    margin: auto;
+    background-color: #7A7A7A; /*#6690BE;*/
 
-	-moz-border-radius: 8px;
-	border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
 
-	-webkit-box-shadow: 1px 1px 5px #000000;
-	-moz-box-shadow: 1px 1px 5px #000000;
-	box-shadow: 1px 1px 5px #000000;
+    -webkit-box-shadow: 1px 1px 5px #000000;
+    -moz-box-shadow: 1px 1px 5px #000000;
+    box-shadow: 1px 1px 5px #000000;
 }
 
 .caption {
-	text-shadow: 1px 1px 2px #666;
-	filter: dropshadow(color=#, offx=1, offy=1);
-	color: #fff;
-	font-size:25px;
-	margin: auto;
+    text-shadow: 1px 1px 2px #666;
+    filter: dropshadow(color=#, offx=1, offy=1);
+    color: #fff;
+    font-size:25px;
+    margin: auto;
 }
 
 #cs-form div {
-	padding: 6px;
+    padding: 6px;
 }
 
 #cs-form form input[type="text"] {
-	width: 100%;
+    width: 100%;
 } 
 
 #cs-form p {
-	font-size: 12px;
-	color: #fff;
-	margin-left: 10px;
+    font-size: 12px;
+    color: #fff;
+    margin-left: 10px;
 }
 
 .error-input {
-	border: 2px solid red;
+    border: 2px solid red;
 }
 
 .error {
-	background-color: #fff;
-	color: red;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
+    background-color: #fff;
+    color: red;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
