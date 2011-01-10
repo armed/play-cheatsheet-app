@@ -52,7 +52,7 @@ public class CheatSheetTest extends FunctionalTest {
         assertContentMatch("cheatsheet 1", resp);
         assertContentMatch("cheatsheet 2", resp);
     }
-    
+
     @Test
     public void deleteCheatSheetWithoutLogin() {
         Response resp = GET("/delete/armed/armed/test-repo");

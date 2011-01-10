@@ -1,9 +1,6 @@
 package controllers;
 
-import java.util.List;
 import java.util.Map;
-
-import com.google.common.base.Strings;
 
 import models.Author;
 import models.Repo;
@@ -12,6 +9,8 @@ import play.modules.gae.GAE;
 import play.modules.twig.Twig;
 import client.GithubClient;
 import client.GithubException;
+
+import com.google.common.base.Strings;
 
 public class CheatSheet extends Application {
 
@@ -43,7 +42,7 @@ public class CheatSheet extends Application {
     public static void edit(String githubUser, String repoName) {
         boolean isNew = true;
 
-        if(!Strings.isNullOrEmpty(githubUser) && !Strings.isNullOrEmpty(repoName)) {
+        if (!Strings.isNullOrEmpty(githubUser) && !Strings.isNullOrEmpty(repoName)) {
             Repo repo = getAccessibleRepo(githubUser, repoName);
             isNew = repo == null;
             if (!isNew) {
