@@ -14,7 +14,7 @@ GET     /edit                                               CheatSheet.edit
 POST    /save                                               CheatSheet.save
 GET     /delete/{githubUser}/{repoName}                     CheatSheet.delete
 
-GET     /firstTime                                          Registration.index
+GET     /setNickname                                        Registration.index
 POST    /register                                           Registration.register
 
 # Map static resources from the /app/public folder to the /public path

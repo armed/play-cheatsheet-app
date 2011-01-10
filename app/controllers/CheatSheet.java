@@ -24,7 +24,7 @@ public class CheatSheet extends Application {
         notFoundIfNull(repo);
 
         if (!repo.visible) {
-            if (!GAE.isLoggedIn() || !repo.author.email.equals(GAE.getUser().getEmail()) || !GAE.isAdmin()) {
+            if (!GAE.isLoggedIn() || (!repo.author.email.equals(GAE.getUser().getEmail()) && !GAE.isAdmin())) {
                 forbidden();
             }
         }

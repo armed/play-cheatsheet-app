@@ -30,10 +30,19 @@ public class Registration extends Application {
             index();
         }
 
-        Author a = new Author();
-        a.email = GAE.getUser().getEmail();
-        a.name = name;
-        a.store(a);
+        Author author = Author.findByEmail(GAE.getUser().getEmail());
+        boolean isNew = author == null;
+
+        if (isNew) {
+            author = new Author();
+            author.email = GAE.getUser().getEmail();
+        }
+        author.name = name;
+        author.storeOrUpdate();
+
+        if (!isNew) {
+            CheatSheet.list();
+        }
 
         CheatSheet.create();
     }
