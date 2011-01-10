@@ -1,0 +1,54 @@
+#{extends 'main.html' /}
+#{set title: isNew.yesno('Create cheat sheet', 'Edit cheat sheet') /}
+
+<div id="cs-form">
+    <div>
+        <div class="caption">${isNew.yesno('New', 'Edit')} cheat sheet</div>
+        #{form @CheatSheet.save()}
+            <div>
+            #{if !isNew}<p>Title:</p>#{/if}
+                <input type="text" name="title" id="title" placeholder="Title" 
+                    value="${flash.title}" />
+            </div>
+            #{if isNew}
+                <p>Github repository which contains cheat sheets in textile format</p>
+                <div>
+                    <input type="text" name="githubUser" id="githubUser" placeholder="Guthub user name" 
+                        value="${flash.githubUser}" />
+                </div>
+                <div>
+                    <input type="text" name="repoName" id="repoName"  placeholder="Repository name" 
+                        value="${flash.repoName}" />
+                </div>
+            #{/if} #{else}
+                <input type="hidden" name="githubUser" id="githubUser" 
+                    value="${flash.githubUser}" />
+                <input type="hidden" name="repoName" id="repoName" 
+                    value="${flash.repoName}" />
+            #{/else}
+            <div>
+                <input type="checkbox" name="visible" id="visible" value="true" title="Other people can view"
+                    ${flash.visible == 'true' ? 'checked' : ''} />Is public
+            </div>
+            <div>
+                <input id="submitBtn" type="submit" value="${isNew.yesno('Create', 'Update')}" />
+            </div>
+        #{/form}
+
+        #{ifErrors}
+            <script type="text/javascript">
+                #{ifError 'title'} $('#title').addClass('error-input'); #{/ifError}
+                #{if isNew}
+                    #{ifError 'githubUser'} $('#githubUser').addClass('error-input'); #{/ifError}
+                    #{ifError 'repoName'} $('#repoName').addClass('error-input'); #{/ifError}
+                #{/if}
+            </script>
+        #{/ifErrors}
+
+        #{if flash.generalError }
+            <div class="error">
+                ${flash.generalError}
+            </div>
+        #{/if}
+    </div>
+</div>

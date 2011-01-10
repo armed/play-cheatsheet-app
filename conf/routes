@@ -9,8 +9,10 @@ GET     /logout                                             Application.logout
 GET     /                                                   CheatSheet.list
 GET     /show/{authorName}/{githubUser}/{repoName}          CheatSheet.show
 GET     /create                                             CheatSheet.create
+GET     /edit/{githubUser}/{repoName}                       CheatSheet.edit
+GET     /edit                                               CheatSheet.edit
 POST    /save                                               CheatSheet.save
-GET     /delete/{authorName}/{githubUser}/{repoName}        CheatSheet.delete
+GET     /delete/{githubUser}/{repoName}                     CheatSheet.delete
 
 GET     /firstTime                                          Registration.index
 POST    /register                                           Registration.register

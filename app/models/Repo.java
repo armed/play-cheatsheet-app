@@ -25,6 +25,7 @@ public class Repo extends TwigModel {
     @Index
     public String repoName;
     public String title;
+    public Boolean visible;
 
     @Parent
     public Author author;
@@ -36,7 +37,7 @@ public class Repo extends TwigModel {
         Author author = Author.findByEmail(authorEmail);
 
         if (author != null) {
-            return findByAncestorAndRepo(githubUser, repoName, author);
+            return findByRepoAndAuthor(githubUser, repoName, author);
         }
         return null;
     }
@@ -45,12 +46,12 @@ public class Repo extends TwigModel {
         Author author = Author.findByName(authorName);
 
         if (author != null) {
-            return findByAncestorAndRepo(githubUser, repoName, author);
+            return findByRepoAndAuthor(githubUser, repoName, author);
         }
         return null;
     }
 
-    public static Repo findByAncestorAndRepo(String githubUser, String repoName, Author author) {
+    public static Repo findByRepoAndAuthor(String githubUser, String repoName, Author author) {
         return allOrNothing(Twig.find().type(Repo.class)
                 .withAncestor(author)
                 .addFilter("githubUser", FilterOperator.EQUAL, githubUser)

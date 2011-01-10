@@ -3,6 +3,8 @@ package controllers;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Strings;
+
 import models.Author;
 import models.Repo;
 import play.data.validation.Required;
@@ -20,9 +22,12 @@ public class CheatSheet extends Application {
 
     public static void show(String authorName, String githubUser, String repoName) {
         Repo repo = Repo.findByAuthorNameAndRepo(authorName, githubUser, repoName);
+        notFoundIfNull(repo);
 
-        if (repo == null) {
-            list();
+        if (!repo.visible) {
+            if (!GAE.isLoggedIn() || !repo.author.email.equals(GAE.getUser().getEmail()) || !GAE.isAdmin()) {
+                forbidden();
+            }
         }
 
         render(repo);
@@ -30,57 +35,79 @@ public class CheatSheet extends Application {
 
     @Secure
     public static void create() {
-        render();
+        boolean isNew = true;
+        renderTemplate("CheatSheet/edit.html", isNew);
+    }
+
+    @Secure
+    public static void edit(String githubUser, String repoName) {
+        boolean isNew = true;
+
+        if(!Strings.isNullOrEmpty(githubUser) && !Strings.isNullOrEmpty(repoName)) {
+            Repo repo = getAccessibleRepo(githubUser, repoName);
+            isNew = repo == null;
+            if (!isNew) {
+                flash.put("title", repo.title);
+                flash.put("githubUser", repo.githubUser);
+                flash.put("repoName", repo.repoName);
+                flash.put("visible", repo.visible);
+            }
+        }
+        render(isNew);
     }
 
     @Secure
     public static void save(
             @Required String title,
             @Required String githubUser,
-            @Required String repoName) {
-
+            @Required String repoName,
+            Boolean visible) {
         if (validation.hasErrors()) {
             params.flash();
             validation.keep();
-            create();
+            edit(null, null);
         }
 
         try {
-            List<String> sheets = new GithubClient(githubUser, repoName).getSheets();
-
-            Repo repo = Repo.findByAuthorEmailAndRepo(GAE.getUser().getEmail(), githubUser, repoName);
+            Repo repo = getAccessibleRepo(githubUser, repoName);
 
             if (repo == null) {
                 repo = new Repo();
                 repo.author = Author.findByEmail(GAE.getUser().getEmail());
                 repo.githubUser = githubUser;
                 repo.repoName = repoName;
-                repo.store();
+                repo.sheets = new GithubClient(githubUser, repoName).getSheets();
+
+                if (repo.sheets.size() == 0) {
+                    flash.put("generalError", "Sorry, no cheat sheets were found at given repository.");
+                    params.flash();
+                    edit(null, null);
+                }
             }
 
             repo.title = title;
-            repo.sheets = sheets;
-            repo.update();
+            repo.visible = visible == null ? false : true;
+            repo.storeOrUpdate();
 
             list();
         } catch (GithubException e) {
-            flash.put("githubError", e.getMessage());
+            flash.put("generalError", e.getMessage());
             params.flash();
-            create();
+            edit(null, null);
         }
     }
 
     @Secure
-    public static void delete(String authorName, String githubUser, String repoName) {
-        Repo repo = Repo.findByAuthorNameAndRepo(authorName, githubUser, repoName);
+    public static void delete(String githubUser, String repoName) {
+        Repo repo = getAccessibleRepo(githubUser, repoName);
+        notFoundIfNull(repo);
 
-        if (repo != null) {
-            if (!repo.author.email.equals(GAE.getUser().getEmail())) {
-                forbidden();
-            }
-            Twig.delete(repo);
-        }
-
+        Twig.delete(repo);
         list();
+    }
+
+    private static Repo getAccessibleRepo(String githubUser, String repoName) {
+        Repo repo = Repo.findByAuthorEmailAndRepo(GAE.getUser().getEmail(), githubUser, repoName);
+        return repo;
     }
 }
