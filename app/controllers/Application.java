@@ -14,6 +14,7 @@ public class Application extends Controller {
         if (GAE.isLoggedIn()) {
             User user = GAE.getUser();
             renderArgs.put("user", user);
+            renderArgs.put("isAdmin", GAE.isAdmin());
         }
     }
 
