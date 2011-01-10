@@ -17,7 +17,7 @@ public class Registration extends Application {
     @Secure
     public static void register(
                     @Required(message = "Name is required.")
-                    @Match(value = "[a-zA-Z]{1}[a-zA-Z\\d\\s]+",
+                    @Match(value = "[a-zA-Z]{1}[a-zA-Z\\d]+",
                             message = "Name must be alphanumeric and beginning with letter.")
                     String name) {
         if (!Strings.isNullOrEmpty(name) && Author.findByName(name) != null) {
